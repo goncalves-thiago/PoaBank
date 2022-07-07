@@ -1,1 +1,1 @@
-﻿create databse PoaBank;
+﻿create database [PoaBank]
