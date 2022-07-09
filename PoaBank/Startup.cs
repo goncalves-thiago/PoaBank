@@ -27,7 +27,7 @@ namespace PoaBank
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PoaBank", Version = "v1" });
             });
-            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnection")));
+            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnectionDudu")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
