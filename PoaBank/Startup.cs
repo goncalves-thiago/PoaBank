@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using PoaBank.Context;
+using PoaBank.Service;
 
 namespace PoaBank
 {
@@ -21,18 +22,20 @@ namespace PoaBank
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddScoped<BankService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PoaBank", Version = "v1" });
             });
-            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnection")));
+            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnectionDudu")));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

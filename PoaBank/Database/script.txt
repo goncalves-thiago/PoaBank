@@ -1,1 +1,3 @@
-﻿create database [PoaBank]
+﻿CREATE DATABASE [PoaBank]; GO
+
+CREATE TABLE dbo.Bank (id INT PRIMARY KEY NOT NULL IDENTITY(1, 1), code NVARCHAR(10) NOT NULL, name NVARCHAR(80) NOT NULL); GO
