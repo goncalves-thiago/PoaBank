@@ -5,7 +5,7 @@ namespace PoaBank.Context
 {
     public class BankContext : DbContext
     {
-        public DbSet<Bank> banks { get; set; }
+        public DbSet<Bank> bank { get; set; }
 
         public BankContext(DbContextOptions<BankContext> opt) : base(opt)
         {
