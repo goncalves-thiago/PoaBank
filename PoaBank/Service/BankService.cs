@@ -1,5 +1,7 @@
 ﻿using PoaBank.Context;
 using PoaBank.Entity;
+using PoaBank.Entity.DTO.Bank;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PoaBank.Service
@@ -12,15 +14,41 @@ namespace PoaBank.Service
             _context = bankContext;
         }
 
-        public void Save(Bank bank)
+        public Bank Add(CreateBankDto _bankDto)
         {
-            _context.bank.Add(bank);
+            Bank _bank = new Bank();
+            _bank.Code = _bankDto.Code;
+            _bank.Name = _bankDto.Name;
+            _context.bank.Add(_bank);
+            _context.SaveChanges();
+            return _bank;
+        }
+
+        public Bank GetById(int _id)
+        {
+            return _context.bank.FirstOrDefault(b => b.Id == _id);
+        }
+
+        public IEnumerable<Bank> Get()
+        {
+            List<Bank> _bank;
+            _bank = _context.bank.ToList();
+            return _bank;
+        }
+
+        public void Update(int _id, string _code, string _name)
+        {
+            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            _bank.Name = _name;
+            _bank.Code = _code;
             _context.SaveChanges();
         }
 
-        public Bank GetById(int id)
+        public void Delete(int _id)
         {
-            return _context.bank.FirstOrDefault(b => b.Id == id);
+            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            _context.Remove(_bank);
+            _context.SaveChanges();
         }
     }
 }

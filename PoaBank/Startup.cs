@@ -28,7 +28,7 @@ namespace PoaBank
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PoaBank", Version = "v1" });
             });
-            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnectionDudu")));
+            services.AddDbContext<BankContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("BankConnectionNote")));
             
         }
 
