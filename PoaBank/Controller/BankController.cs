@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Mvc;
 using PoaBank.Context;
 using PoaBank.Entity;
-using PoaBank.Entity.DTO.Bank;
+using PoaBank.Entity.DTO;
 using PoaBank.Service;
 using System.Collections.Generic;
 
@@ -50,11 +51,17 @@ namespace PoaBank.Controller
         [HttpDelete("{id}")]
         public IActionResult Delete(int id, [FromServices] BankService _bankService)
         {
-            System.Console.WriteLine($"Entering Delete[Id: {id}");
-            Bank _bank = _bankService.GetById(id);
-            if (_bank == null) return NotFound();
-            _bankService.Delete(id);
-            return NoContent();
+            System.Console.WriteLine($"Entering Delete[Id: {id}]");
+
+            if(_bankService.Delete(id).IsSuccess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NoContent();
+            }
+
         }        
     }
 }

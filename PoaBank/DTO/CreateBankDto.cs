@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PoaBank.Entity.DTO.Bank
+namespace PoaBank.Entity.DTO
 {
     public class CreateBankDto
     {

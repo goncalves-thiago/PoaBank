@@ -1,6 +1,7 @@
-﻿using PoaBank.Context;
+﻿using FluentResults;
+using PoaBank.Context;
 using PoaBank.Entity;
-using PoaBank.Entity.DTO.Bank;
+using PoaBank.Entity.DTO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,13 +43,20 @@ namespace PoaBank.Service
             _bank.Name = _name;
             _bank.Code = _code;
             _context.SaveChanges();
-        }
+}
 
-        public void Delete(int _id)
+        public Result Delete(int _id)
         {
-            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            Bank _bank = GetById(_id);
+
+            if(_bank is null)
+            {
+                return Result.Fail("Erro ao deletar!");
+            }
+
             _context.Remove(_bank);
             _context.SaveChanges();
+            return Result.Ok();
         }
     }
 }
