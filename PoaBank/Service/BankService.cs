@@ -1,7 +1,8 @@
-﻿using FluentResults;
+﻿using AutoMapper;
+using FluentResults;
 using PoaBank.Context;
+using PoaBank.Dto;
 using PoaBank.Entity;
-using PoaBank.Entity.DTO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,16 +11,16 @@ namespace PoaBank.Service
     public class BankService
     {
         private BankContext _context;
-        public BankService(BankContext bankContext)
+        private IMapper _mapper;
+        public BankService(BankContext bankContext, IMapper mapper)
         {
             _context = bankContext;
+            _mapper = mapper;
         }
 
         public Bank Add(CreateBankDto _bankDto)
         {
-            Bank _bank = new Bank();
-            _bank.Code = _bankDto.Code;
-            _bank.Name = _bankDto.Name;
+            Bank _bank = _mapper.Map<Bank>(_bankDto);
             _context.bank.Add(_bank);
             _context.SaveChanges();
             return _bank;
@@ -32,28 +33,22 @@ namespace PoaBank.Service
 
         public IEnumerable<Bank> Get()
         {
-            List<Bank> _bank;
-            _bank = _context.bank.ToList();
-            return _bank;
+            return _context.bank.ToList();
         }
 
-        public void Update(int _id, string _code, string _name)
+        public Result Update(int _id, CreateBankDto _bankDto)
         {
             var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
-            _bank.Name = _name;
-            _bank.Code = _code;
+            if (_bank is null) return Result.Fail("Bank not found.");
+            _mapper.Map(_bankDto, _bank);
             _context.SaveChanges();
-}
+            return Result.Ok();
+        }
 
         public Result Delete(int _id)
         {
-            Bank _bank = GetById(_id);
-
-            if(_bank is null)
-            {
-                return Result.Fail("Erro ao deletar!");
-            }
-
+            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            if (_bank is null) return Result.Fail("Bank not found");
             _context.Remove(_bank);
             _context.SaveChanges();
             return Result.Ok();
