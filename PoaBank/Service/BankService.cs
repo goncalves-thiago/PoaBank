@@ -1,56 +1,53 @@
 ﻿using AutoMapper;
 using FluentResults;
-using PoaBank.Context;
 using PoaBank.Dto;
 using PoaBank.Entity;
+using PoaBank.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PoaBank.Service
 {
-    public class BankService
+    public class BankService : IBankService
     {
-        private BankContext _context;
+        private IRepository<Bank> _repository;
         private IMapper _mapper;
-        public BankService(BankContext bankContext, IMapper mapper)
+        public BankService(IRepository<Bank> repository, IMapper mapper)
         {
-            _context = bankContext;
+            _repository = repository;
             _mapper = mapper;
         }
 
         public Bank Add(CreateBankDto _bankDto)
         {
             Bank _bank = _mapper.Map<Bank>(_bankDto);
-            _context.bank.Add(_bank);
-            _context.SaveChanges();
+            _repository.Create(_bank);
             return _bank;
         }
 
-        public Bank GetById(int _id)
+        public Bank Get(int _id)
         {
-            return _context.bank.FirstOrDefault(b => b.Id == _id);
+            return _repository.Get(_id);
         }
 
         public IEnumerable<Bank> Get()
         {
-            return _context.bank.ToList();
+            return _repository.Get();
         }
 
         public Result Update(int _id, CreateBankDto _bankDto)
         {
-            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            var _bank = _repository.Get(_id);
             if (_bank is null) return Result.Fail("Bank not found.");
             _mapper.Map(_bankDto, _bank);
-            _context.SaveChanges();
+            _repository.Update(_bank);
             return Result.Ok();
         }
 
         public Result Delete(int _id)
         {
-            var _bank = _context.bank.FirstOrDefault(b => b.Id == _id);
+            var _bank = _repository.Get(_id);
             if (_bank is null) return Result.Fail("Bank not found");
-            _context.Remove(_bank);
-            _context.SaveChanges();
+            _repository.Delete(_bank);
             return Result.Ok();
         }
     }
