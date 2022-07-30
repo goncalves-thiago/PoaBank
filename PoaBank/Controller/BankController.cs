@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PoaBank.Dto;
 using PoaBank.Entity;
+using PoaBank.Interfaces;
 using PoaBank.Service;
 using System.Collections.Generic;
 
@@ -11,8 +12,8 @@ namespace PoaBank.Controller
     [Route("/v1/[controller]")]
     public class BankController : ControllerBase
     {
-        private BankService _bankService;
-        public BankController(BankService bankService)
+        private IBankService _bankService;
+        public BankController(IBankService bankService)
         {
             _bankService = bankService;
         }
@@ -22,7 +23,7 @@ namespace PoaBank.Controller
         {
             System.Console.WriteLine($"Entering Save[Code: {bankDto.Code}, Name: {bankDto.Name}]");
             Bank _bank = _bankService.Add(bankDto);
-            return CreatedAtAction(nameof(GetById), new { id = _bank.Id }, _bank);
+            return CreatedAtAction(nameof(Get), new { id = _bank.Id }, _bank);
         }
 
         [HttpGet]
@@ -35,10 +36,10 @@ namespace PoaBank.Controller
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult Get(int id)
         {
             System.Console.WriteLine($"Entering GetBankById[id: {id}]");
-            Bank _bank = _bankService.GetById(id);
+            Bank _bank = _bankService.Get(id);
             if (_bank == null) return NotFound();
             return Ok(_bank);
         }

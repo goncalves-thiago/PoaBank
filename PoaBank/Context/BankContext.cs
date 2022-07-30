@@ -1,15 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using PoaBank.Entity;
+using PoaBank.Interfaces;
+using System.Data;
 
 namespace PoaBank.Context
 {
-    public class BankContext : DbContext
+    public class BankContext : IBankContext
     {
-        public DbSet<Bank> bank { get; set; }
-
-        public BankContext(DbContextOptions<BankContext> opt) : base(opt)
+        private readonly IConfiguration _configuration;
+        public BankContext(IConfiguration configuration)
         {
-
+            _configuration = configuration;
+        }
+        public IDbConnection Connection()
+        {
+            return new SqlConnection(_configuration.GetConnectionString("BankConnectionNote"));
         }
     }
 }
